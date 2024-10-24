@@ -20,4 +20,4 @@ GetKillFeed(playerid); // Get player kill feed state.
 
 
 - PREVIEW:
-https://imgur.com/undefined
+https://imgur.com/3NhCtcJ
