@@ -1,4 +1,8 @@
-#include <YSI_Coding\y_hooks>
+#tryinclude <open.mp>
+
+#if !defined _INC_open_mp
+    #include <a_samp>
+#endif
 
 #if !defined FEED_MAX_LINES
 	#define FEED_MAX_LINES (6)
@@ -48,13 +52,18 @@ new FeedMsgs[10][FEED_SIZE] =
 	 {""FEED_PRIMARY_COLOR"You ate "FEED_SECONDARY_COLOR"%s's "FEED_PRIMARY_COLOR"ass~n~"}
 };
 
-hook OnPlayerConnect(playerid)
+public OnPlayerConnect(playerid)
 {
 	CreateFeedTD(playerid);
-	return true;
+
+    #if defined _______OnPlayerConnect
+        return _______OnPlayerConnect(playerid);
+    #else
+        return true;
+    #endif
 }
 
-hook OnPlayerDisconnect(playerid)
+public OnPlayerDisconnect(playerid, reason)
 {
 	DestroyFeedTD(playerid);
 
@@ -62,16 +71,26 @@ hook OnPlayerDisconnect(playerid)
 		KillFeedString[playerid][i] = "_";
 
 	KillFeedLines[playerid] = 0;
-	return true;
+
+    #if defined _______OnPlayerDisconnect
+        return _______OnPlayerDisconnect(playerid, reason);
+    #else
+        return true;
+    #endif
 }
 
-hook OnPlayerDeath(playerid, killerid, WEAPON:reason)
+public OnPlayerDeath(playerid, killerid, WEAPON:reason)
 {
 	if(killerid == INVALID_PLAYER_ID || playerid == INVALID_PLAYER_ID)
 		return false;
 
 	UpdateKillFeed(killerid, playerid);
-	return true;
+
+    #if defined _______OnPlayerDeath
+        return _______OnPlayerDeath(playerid, killerid, WEAPON:reason);
+    #else
+        return true;
+    #endif
 }
 
 UpdateKillFeed(killerid, playerid)
@@ -168,7 +187,7 @@ DestroyFeedTD(playerid)
 stock SetKillFeed(playerid = INVALID_PLAYER_ID, bool:enable)
 {
 	if(playerid == INVALID_PLAYER_ID){
-		for(new i; i < MAX_PLAYERS; i +)
+		for(new i; i != MAX_PLAYERS; i ++)
 			p_FeedEnabled[i] = enable;
 
 		g_FeedEnabled = enable;
@@ -191,7 +210,7 @@ stock SetFeedRandomMsgs(playerid = INVALID_PLAYER_ID, bool:enable)
 {
 	if(playerid == INVALID_PLAYER_ID)
 	{
-		for(new i; i < MAX_PLAYERS; i +)
+		for(new i; i != MAX_PLAYERS; i ++)
 			p_FeedRandomMsgs[i] = enable;
 
 		g_FeedRandomMsgs = enable;
@@ -209,3 +228,33 @@ stock bool:GetFeedRandomMsgs(playerid = INVALID_PLAYER_ID)
 
 	return p_FeedRandomMsgs[playerid];
 }
+
+#if defined _ALS_OnPlayerConnect
+    #undef OnPlayerConnect
+#else
+    #define _ALS_OnPlayerConnect
+#endif
+#define OnPlayerConnect _______OnPlayerConnect
+#if defined _______OnPlayerConnect
+    forward _______OnPlayerConnect(playerid);
+#endif
+
+#if defined _ALS_OnPlayerDisconnect
+    #undef OnPlayerDisconnect
+#else
+    #define _ALS_OnPlayerDisconnect
+#endif
+#define OnPlayerDisconnect _______OnPlayerDisconnect
+#if defined _______OnPlayerDisconnect
+    forward _______OnPlayerDisconnect(playerid);
+#endif
+
+#if defined _ALS_OnPlayerDeath
+    #undef OnPlayerDeath
+#else
+    #define _ALS_OnPlayerDeath
+#endif
+#define OnPlayerDeath _______OnPlayerDeath
+#if defined _______OnPlayerDeath
+    forward _______OnPlayerDeath(playerid, killerid, WEAPON:reason);
+#endif
