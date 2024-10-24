@@ -1,10 +1,12 @@
-- ABOUT:
+ABOUT
+- 
 
 The code can easily be altered/modified to the user's liking.
 
 The functionality is similar to the damage feed in include weaponconfig.
 
-- USE:
+USE
+- 
 
 Place the killfeed.inc file in: pawno/includes in your gamemode folder and then include it in your gamemode and include in your gamemode script.
 
@@ -16,7 +18,8 @@ Place the killfeed.inc file in: pawno/includes in your gamemode folder and then 
 
 #define FEED_SECONDARY_COLOR "~r~~h~" default: ~r~~h~
 
-- FUNCTIONS:
+FUNCTIONS
+- 
 
 SetKillFeed(playerid, true or false); // Enable or Disable kill feed for player. INVALID_PLAYER_ID will set the value for all players
 
