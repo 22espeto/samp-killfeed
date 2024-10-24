@@ -1,4 +1,4 @@
-base credits: @pushline
+base credits: pushiline(https://github.com/pushline)
 
 ABOUT
 - 
