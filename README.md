@@ -28,4 +28,9 @@ GetFeedRandomMsgs(playerid); // Get player kill feed random messages state.
 
 
 - PREVIEW:
-https://imgur.com/3NhCtcJ
+
+With random messages enabled:
+https://imgur.com/pEHac4h
+
+With random messages disabled:
+https://imgur.com/asCHelA
