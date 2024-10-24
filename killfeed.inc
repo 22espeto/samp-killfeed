@@ -1,10 +1,20 @@
 #include <YSI_Coding\y_hooks>
 
-#define FEED_MAX_LINES 6
-#define FEED_TIME 5000
-#define FEED_SIZE 64 * FEED_MAX_LINES
+#if !defined FEED_MAX_LINES
+	#define FEED_MAX_LINES (6)
+#endif
+
+#if !defined FEED_TIME
+	#define FEED_TIME (5000)
+#endif
+
+#if !defined FEED_SIZE
+	#define FEED_SIZE (64 * FEED_MAX_LINES)
+#endif
 
 new
+	bool:g_Feed_Enabled = true,
+	bool:p_Feed_Enabled[MAX_PLAYERS] = {true, ...},
 	PlayerText:KillFeedTd[MAX_PLAYERS],
 	KillFeedLines[MAX_PLAYERS],
 	KillFeedTimer[MAX_PLAYERS],
@@ -39,6 +49,9 @@ hook OnPlayerDeath(playerid, killerid, WEAPON:reason)
 
 UpdateKillFeed(killerid, playerid)
 {
+	if(!p_Feed_Enabled[killerid])
+		return false;
+
 	new killLine[FEED_SIZE], killLine2[FEED_SIZE], killedName[MAX_PLAYER_NAME];
 
 	GetPlayerName(playerid, killedName, MAX_PLAYER_NAME);
@@ -103,28 +116,6 @@ public UpdateKillFeedLine(playerid)
 	return true;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 CreateFeedTD(playerid)
 {
     KillFeedTd[playerid] = CreatePlayerTextDraw(playerid, 319.000000, 389.000000, "");
@@ -141,4 +132,26 @@ CreateFeedTD(playerid)
 DestroyFeedTD(playerid)
 {
 	PlayerTextDrawDestroy(playerid, KillFeedTd[playerid]);
+}
+
+stock SetKillFeed(playerid = INVALID_PLAYER_ID, bool:enable)
+{
+	if(playerid == INVALID_PLAYER_ID){
+		for(new i; i < MAX_PLAYERS; i +)
+			p_Feed_Enabled[i] = enable;
+
+		g_Feed_Enabled = enable;
+	}
+	else
+		p_Feed_Enabled[playerid] = enable;
+
+	return enable;
+}
+
+stock bool:GetKillFeed(playerid = INVALID_PLAYER_ID)
+{
+	if(playerid == INVALID_PLAYER_ID)
+		return g_Feed_Enabled;
+
+	return p_Feed_Enabled[playerid];
 }
