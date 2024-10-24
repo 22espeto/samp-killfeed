@@ -17,3 +17,7 @@ Place the killfeed.inc file in: pawno/includes in your gamemode folder and then 
 SetKillFeed(playerid, true or false); // Enable or Disable kill feed for player
 
 GetKillFeed(playerid); // Get player kill feed state.
+
+
+- PREVIEW:
+https://imgur.com/undefined
