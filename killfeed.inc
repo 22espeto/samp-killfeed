@@ -12,14 +12,41 @@
 	#define FEED_SIZE (64 * FEED_MAX_LINES)
 #endif
 
+#if !defined FEED_PRIMARY_COLOR
+	#define FEED_PRIMARY_COLOR "~w~~h~"
+#endif
+
+#if !defined FEED_SECONDARY_COLOR
+	#define FEED_SECONDARY_COLOR "~r~~h~"
+#endif
+
 new
-	bool:g_Feed_Enabled = true,
-	bool:p_Feed_Enabled[MAX_PLAYERS] = {true, ...},
+	bool:g_FeedEnabled = true,
+	bool:p_FeedEnabled[MAX_PLAYERS] = {true, ...},
+
+	bool:g_FeedRandomMsgs = false,
+	bool:p_FeedRandomMsgs[MAX_PLAYERS] = {false, ...},
+
 	PlayerText:KillFeedTd[MAX_PLAYERS],
+
 	KillFeedLines[MAX_PLAYERS],
 	KillFeedTimer[MAX_PLAYERS],
 	KillFeedString[MAX_PLAYERS][FEED_MAX_LINES][FEED_SIZE]
 ;
+
+new FeedMsgs[10][FEED_SIZE] = 
+{
+	 {""FEED_PRIMARY_COLOR"You killed "FEED_SECONDARY_COLOR"%s~n~"},
+	 {""FEED_PRIMARY_COLOR"You fucked "FEED_SECONDARY_COLOR"%s~n~"},
+	 {""FEED_PRIMARY_COLOR"You smeared "FEED_SECONDARY_COLOR"%s "FEED_PRIMARY_COLOR"in shit~n~"},
+	 {""FEED_PRIMARY_COLOR"You sent "FEED_SECONDARY_COLOR"%s "FEED_PRIMARY_COLOR"to cemetery~n~"},
+	 {""FEED_PRIMARY_COLOR"You murdered "FEED_SECONDARY_COLOR"%s~n~"},
+	 {""FEED_PRIMARY_COLOR"You owned "FEED_SECONDARY_COLOR"%s~n~"},
+	 {""FEED_PRIMARY_COLOR"You decapitated "FEED_SECONDARY_COLOR"%s~n~"},
+	 {""FEED_PRIMARY_COLOR"You raped "FEED_SECONDARY_COLOR"%s~n~"},
+	 {""FEED_PRIMARY_COLOR"You sent "FEED_SECONDARY_COLOR"%s "FEED_PRIMARY_COLOR"to heaven~n~"},
+	 {""FEED_PRIMARY_COLOR"You ate "FEED_SECONDARY_COLOR"%s's "FEED_PRIMARY_COLOR"ass~n~"}
+};
 
 hook OnPlayerConnect(playerid)
 {
@@ -49,7 +76,7 @@ hook OnPlayerDeath(playerid, killerid, WEAPON:reason)
 
 UpdateKillFeed(killerid, playerid)
 {
-	if(!p_Feed_Enabled[killerid])
+	if(!p_FeedEnabled[killerid])
 		return false;
 
 	new killLine[FEED_SIZE], killLine2[FEED_SIZE], killedName[MAX_PLAYER_NAME];
@@ -64,7 +91,11 @@ UpdateKillFeed(killerid, playerid)
 		KillFeedLines[killerid] = 0;
 	}
 
-	format(killLine, sizeof killLine, "~w~~h~You sent ~r~~h~%s ~w~~h~to heaven~n~", killedName);
+	if(p_FeedRandomMsgs[killerid])
+		format(killLine, sizeof killLine, FeedMsgs[random(sizeof(FeedMsgs))], killedName);
+	else
+		format(killLine, sizeof killLine, FeedMsgs[0], killedName);
+
 	format(KillFeedString[killerid][KillFeedLines[killerid]], FEED_SIZE, killLine);
 	
 	for(new i; i < FEED_MAX_LINES; i ++)
@@ -138,12 +169,12 @@ stock SetKillFeed(playerid = INVALID_PLAYER_ID, bool:enable)
 {
 	if(playerid == INVALID_PLAYER_ID){
 		for(new i; i < MAX_PLAYERS; i +)
-			p_Feed_Enabled[i] = enable;
+			p_FeedEnabled[i] = enable;
 
-		g_Feed_Enabled = enable;
+		g_FeedEnabled = enable;
 	}
 	else
-		p_Feed_Enabled[playerid] = enable;
+		p_FeedEnabled[playerid] = enable;
 
 	return enable;
 }
@@ -151,7 +182,30 @@ stock SetKillFeed(playerid = INVALID_PLAYER_ID, bool:enable)
 stock bool:GetKillFeed(playerid = INVALID_PLAYER_ID)
 {
 	if(playerid == INVALID_PLAYER_ID)
-		return g_Feed_Enabled;
+		return g_FeedEnabled;
 
-	return p_Feed_Enabled[playerid];
+	return p_FeedEnabled[playerid];
+}
+
+stock SetFeedRandomMsgs(playerid = INVALID_PLAYER_ID, bool:enable)
+{
+	if(playerid == INVALID_PLAYER_ID)
+	{
+		for(new i; i < MAX_PLAYERS; i +)
+			p_FeedRandomMsgs[i] = enable;
+
+		g_FeedRandomMsgs = enable;
+	}
+	else
+		p_FeedRandomMsgs[playerid] = enable;
+
+	return enable;
+}
+
+stock bool:GetFeedRandomMsgs(playerid = INVALID_PLAYER_ID)
+{
+	if(playerid == INVALID_PLAYER_ID)
+		return g_FeedRandomMsgs;
+
+	return p_FeedRandomMsgs[playerid];
 }
