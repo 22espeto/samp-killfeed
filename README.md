@@ -25,9 +25,7 @@ GetKillFeed(playerid); // Get player kill feed state.
 SetFeedRandomMsgs(playerid, true or false); // Enable or Disable kill feed random messages for player. INVALID_PLAYER_ID will set the value for all players
 
 GetFeedRandomMsgs(playerid); // Get player kill feed random messages state.
-
-
-
+-
 - PREVIEW:
 
 With random messages enabled:
