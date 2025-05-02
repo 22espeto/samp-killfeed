@@ -1,5 +1,3 @@
-base credits: [pushline](https://github.com/pushline)
-
 ABOUT
 - 
 
